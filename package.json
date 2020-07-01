@@ -1,7 +1,7 @@
 {
-  "name": "lightlyburning",
+  "name": "megatrone",
   "version": "1.0.0",
-  "description": "Def not amazon kindle",
+  "description": "Employee Reimbursement System",
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon --exec ts-node src/index.ts",

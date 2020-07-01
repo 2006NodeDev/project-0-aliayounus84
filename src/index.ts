@@ -20,7 +20,6 @@ app.use(loggingMiddleware)// we use use to match everything, no path to match al
 //middleware for tracking connections to our server
 app.use(sessionMiddleware)
 
-//app.use(authenticationMiddleware) this makes us unable to login oops!
 
 
 app.use('/users', userRouter)// redirect all requests on /users to the router
