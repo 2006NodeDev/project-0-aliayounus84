@@ -9,35 +9,34 @@ import { getUserByUsernameAndPassword } from './daos/user-dao'
 const app = express()//we call the express function
 //we get a completed application
 
-// app .use matches every single http verb( get, post and delete and )
-// if I don't specify a path, thats the same as every path ( '/' )
+
 app.use(express.json())//this is an example of middle ware
 
 
-//our custom middleware that we ant to run on all requests
-app.use(loggingMiddleware)// we use use to match everything, no path to match all paths
-//middleware for tracking connections to our server
+
+app.use(loggingMiddleware)
+
 app.use(sessionMiddleware)
 
 
 
-app.use('/users', userRouter)// redirect all requests on /users to the router
+app.use('/users', userRouter)
 
 
 // an endpoint that unathenticated users can send credentials to to recieve authentication
 app.post('/login', async (req:Request, res:Response, next:NextFunction)=>{
-    // you could use destructuring, see ./routers/book-router
+  
     let username = req.body.username
     let password = req.body.password
-    // if I didn't get a usrname/password send an error and say give me both fields
+    
     if(!username || !password){
-        // make a custom http error and throw it or just send a res
+      
         throw new BadCredentialsError()
     } else {
         try{
             let user = await getUserByUsernameAndPassword(username, password)
-            req.session.user = user// need to remeber to add their user data to the session
-            // so we can use that data in other requests
+            req.session.user = user
+          
             res.json(user)
         }catch(e){
             next(e)
@@ -63,6 +62,6 @@ app.use((err, req, res, next) => {
     }
 })
 
-app.listen(8080, () => {
+app.listen(2020, () => {
     console.log('Server has started');
 })

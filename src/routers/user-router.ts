@@ -12,7 +12,7 @@ userRouter.use(authenticationMiddleware)
 
 
 // Get all
-userRouter.get('/', authorizationMiddleware(['Admin']), async (req: Request, res: Response, next: NextFunction) => {
+userRouter.get('/', authorizationMiddleware(['ADMIN']), async (req: Request, res: Response, next: NextFunction) => {
     //this function needs to get all the user data - outside its scope 
     // we should call a function that gets us the user data
     //if we get it successfully, we want to return it using res.json
@@ -81,8 +81,6 @@ userRouter.post('/', authorizationMiddleware(['Admin']), async (req: Request, re
 
 
 
-//patch user
+//patch user userRouter.patch
 
-//delete user
-
-
+//delete user  userRouter.delete
