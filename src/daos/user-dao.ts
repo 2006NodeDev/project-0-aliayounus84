@@ -6,10 +6,10 @@ import { User } from "../models/User";
 import { AuthFailureError} from '../errors/AuthFailureError'
 import { UserUserInputError } from "../errors/UserUserInputError";
 
-
+// Get All user 
 export async function getAllUsers():Promise<User[]> {
     //first thing is declare a client
-    let client: PoolClient
+    let client: PoolClient = newFunction();
     try {
         //get a connection
         client = await connectionPool.connect()
@@ -17,16 +17,21 @@ export async function getAllUsers():Promise<User[]> {
         let results = await client.query(`select u.user_id, u.username , u."password" , u.email ,r.role_id , r."role" from project_0_ers.users u left join project_0_ers.roles r on u."role" = r.role_id;`)
         return results.rows.map(UserDTOtoUserConvertor)//return the rows
     } catch (e) {
-        //if we get an error we don't know 
+        //for unknown error
         console.log(e)
         throw new Error('Unhandled Error Occured')
     } finally {
         //let the connectiopn go back to the pool
         client && client.release()
     }
+
+    function newFunction() {
+        let client: PoolClient;
+        return client;
+    }
 }
 
-
+//Get user by Id
 export async function getUserById(id: number):Promise<User> {
     let client: PoolClient
     try {
