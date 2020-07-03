@@ -38,15 +38,9 @@ export async function getUserById(id: number):Promise<User> {
         //get a connection
         client = await connectionPool.connect()
         //send the query
-        let results = await client.query(`select u.user_id, 
-                u.username , 
-                u."password" , 
-                u.email ,
-                r.role_id , 
-                r."role" 
-                from project_0_ers.users u left join project_0_ers.users.roles r on u."role" = r.role_id 
-                where u.user_id = $1;`,
-            [id])
+        
+        
+        let results = await client.query('Select u."user_id", u ."username", u."password", u."firstname" ,  u."lastname" ,  u."email", r."role_id",   r."role" from project_0_ers.users u join project_0_ers.roles r on u."role" = r."role_id"  where u."user_id"= $1;',[id])
 
         if(results.rowCount === 0){
             throw new Error('User Not Found')

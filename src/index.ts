@@ -62,6 +62,8 @@ app.use((err, req, res, next) => {
     }
 })
 
-app.listen(2020, () => {
+
+app.listen(2006, () => {
     console.log('Server has started');
 })
+
