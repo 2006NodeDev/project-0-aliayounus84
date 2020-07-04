@@ -1,9 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { authenticationMiddleware } from '../middleware/authentication-middleware'
-import { getAllUsers, getUserById, saveOneUser } from '../daos/user-dao'
+import { getAllUsers, getUserById, UpdateUser } from '../daos/user-dao'
 import { authorizationMiddleware } from '../middleware/authorization-middleware'
 import { UserUserInputError } from '../errors/UserUserInputError'
 import { User } from '../models/User'
+//import { PoolClient } from 'pg'
 // our base path is /users
 export const userRouter = express.Router()
 
@@ -12,13 +13,8 @@ userRouter.use(authenticationMiddleware)
 
 
 // Get all
-userRouter.get('/', authorizationMiddleware(['Admin']), async (req: Request, res: Response, next: NextFunction) => {
-    //this function needs to get all the user data - outside its scope 
-    // we should call a function that gets us the user data
-    //if we get it successfully, we want to return it using res.json
-    //if we get an error we want to pass that error to the error handler with next(err)
-    // interacting with the database is asynchronous, which means the getAllUser function returns a promise
-    // can this function execute with only a promise?
+userRouter.get('/', authorizationMiddleware(['Finance-Manager']), async (req: Request, res: Response, next: NextFunction) => {
+    
     try {
         //lets try not being async and see what happens
         let allUsers = await getAllUsers()//thinking in abstraction
@@ -45,32 +41,71 @@ userRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
     }
 })
 
-//save new
-userRouter.post('/', authorizationMiddleware(['Admin']), async (req: Request, res: Response, next: NextFunction) => {
+// //save new
+// userRouter.post('/', authorizationMiddleware(['Finance-Manager']), async (req: Request, res: Response, next: NextFunction) => {
+//     // get input from the user
+//     let { userId,username, password,firstname,lastname, email, role } = req.body//a little old fashioned destructuring
+//     //verify that input
+//     if (!username || !password || !role) {
+//         next(new UserUserInputError)
+//     } else {
+//         //try  with a function call to the dao layer to try and save the user
+//         let newUser: User = {
+//             username,
+//             password,
+//             firstname,
+//             lastname,
+//             role,
+//             userId,
+//             email
+//         }
+//         newUser.email = email || null
+//         try {
+//             let savedUser = await saveOneUser(newUser)
+//             res.json(savedUser)// needs to have the updated userId
+//         } catch (e) {
+//             next(e)
+//         }
+//     }
+
+
+//     //catch with next(e)
+
+
+// })
+
+
+
+
+
+//patch user
+
+userRouter.patch('/', authorizationMiddleware(['Admin']), async (req: Request, res: Response, next: NextFunction) => {
     // get input from the user
-    let { username, password, email, role } = req.body//a little old fashioned destructuring
+    let { userId,username, password,firstname,lastname, email, role } = req.body//a little old fashioned destructuring
     //verify that input
     if (!username || !password || !role) {
         next(new UserUserInputError)
     } else {
         //try  with a function call to the dao layer to try and save the user
-        let newUser: User = {
+        let UserUpdate: User = {
             username,
             password,
+            firstname,
+            lastname,
             role,
-            userId: 0,
-            email,
+            userId,
+            email
         }
-        newUser.email = email || null
+        UserUpdate.email = email || null
         try {
-            let savedUser = await saveOneUser(newUser)
-            res.json(savedUser)// needs to have the updated userId
+             await UpdateUser(UserUpdate)
+
+            res.send('User info is updated!')// needs to have the updated userId
         } catch (e) {
             next(e)
         }
     }
-
-
 
 
     //catch with next(e)
@@ -79,8 +114,5 @@ userRouter.post('/', authorizationMiddleware(['Admin']), async (req: Request, re
 })
 
 
+//Delete user
 
-
-//patch user
-
-//delete user

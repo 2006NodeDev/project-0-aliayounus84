@@ -63,7 +63,7 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(2006, () => {
+app.listen(2000, () => {
     console.log('Server has started');
 })
 

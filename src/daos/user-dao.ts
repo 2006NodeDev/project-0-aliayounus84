@@ -4,7 +4,8 @@ import { UserDTOtoUserConvertor } from "../utils/UserDTO-to-User-convertor";
 import { UserNotFoundError } from "../errors/UserNotFoundError";
 import { User } from "../models/User";
 import { AuthFailureError} from '../errors/AuthFailureError'
-import { UserUserInputError } from "../errors/UserUserInputError";
+//import { UserUserInputError } from "../errors/UserUserInputError";
+//import { roles } from "../models/roles";
 
 // Get All user 
 export async function getAllUsers():Promise<User[]> {
@@ -96,37 +97,73 @@ export async function getUserByUsernameAndPassword(username:string, password:str
 }
 
 
-// save one user
-export async function saveOneUser(newUser:User):Promise<User>{
-    let client:PoolClient
-    try{
-        client = await connectionPool.connect()
-        //if you have multiple querys, you should make a transaction
-        await client.query('BEGIN;')//start a transaction
-        let roleId = await client.query(`select r."role_id" from project_0_ers.roles r where r."role" = $1`, [newUser.role])
-        if(roleId.rowCount === 0){
-            throw new Error('Role Not Found')
-        }
-        roleId = roleId.rows[0].role_id
-        let results = await client.query(`insert into project_0_ers.users ("username", "password","email","role")
-                                            values($1,$2,$3,$4) returning "user_id" `,//allows you to return some values from the rows in an insert, update or delete
-                                            [newUser.username, newUser.password, newUser.email, roleId])
-        newUser.userId = results.rows[0].user_id
-        await client.query('COMMIT;')//ends transaction
-        return newUser
+// // save one user
+// export async function saveOneUser(newUser:User):Promise<User>{
+//     let client:PoolClient
+//     try{
+//         client = await connectionPool.connect()
+//         client.query('BEGIN;')//start a transaction
+//         // if you have multiple querys, you should make a transaction
+//         // await client.query('BEGIN;')//start a transaction
+//         // let roleId = await client.query(`select r."role_id" from project_0_ers.roles r where r."role" = $1`, [newUser.role])
+//         // if(roleId.rowCount === 0){
+//         //     throw new Error('Role Not Found')
+//         // }
 
-    }catch(e){
-        client && client.query('ROLLBACK;')//if a js error takes place, undo the sql
-        if(e.message === 'Role Not Found'){
-            throw new UserUserInputError()// role not found error
-        }
-        //if we get an error we don't know 
-        console.log(e)
-        throw new Error('Unhandled Error Occured')
-    }finally{
+//     //    roleId = roleId.rows[0].role_id
+//         let results = await client.query(`insert into project_0_ers.users ("username", "password","firstname","lastname","email","role")
+//                                             values($1,$2,$3,$4,$5,$6) returning "user_id" `,//allows you to return some values from the rows in an insert, update or delete
+//                                             [newUser.username, newUser.password,newUser.firstname,newUser.lastname, newUser.email, newUser.role])
+//         newUser.userId = results.rows[0].user_id
+//         await client.query('COMMIT;')//ends transaction
+//         return newUser
+
+//     }catch(e){
+//         client && client.query('ROLLBACK;')//if a js error takes place, undo the sql
+//         if(e.message === 'Role Not Found'){
+//             throw new UserUserInputError()// role not found error
+//         }
+//         //if we get an error we don't know 
+//         console.log(e)
+//         throw new Error('Unhandled Error Occured')
+//     }finally{
+//         client && client.release();
+//     }
+// }
+
+
+//-------------------------------------------------------
+
+
+
+
+// **************************************updating a user in the database 
+
+export async function UpdateUser(UserUpdate: User) {
+    let client: PoolClient;
+    try {
+        client = await connectionPool.connect();
+        client.query('BEGIN');
+
+        await client.query('update project_0_ers.users set username = $1, password = $2, firstname = $3, lastname = $4, email = $5, role=$6 where user_id = $7',
+            [UserUpdate.username, UserUpdate.password, UserUpdate.firstname, UserUpdate.lastname, UserUpdate.email, UserUpdate.role, UserUpdate.userId]);
+        
+
+    
+        client.query('COMMIT');
+    } catch (e) {
+        client.query('ROLLBACK');
+        throw {
+            status: 500,
+            message: 'Internal Server Error'
+        };
+    } finally {
         client && client.release();
     }
 }
+
+   
+
 
 
 
