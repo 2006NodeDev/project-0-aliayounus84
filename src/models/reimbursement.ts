@@ -1,4 +1,4 @@
-export class reimbursement {
+export class Reimbursement {
 
 reimbursementId: number
 author: number
