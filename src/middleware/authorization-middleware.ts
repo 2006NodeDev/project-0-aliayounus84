@@ -5,7 +5,6 @@
 
 import { Request, Response, NextFunction } from "express";
 
-// utilize the factory pattern, we provide an array of accepted roles, and return a function that allows those roles through
 // this function is a middleware factory
 export function authorizationMiddleware(roles:string[]){// build a middleware function
     return (req:Request, res:Response, next:NextFunction) => {
@@ -18,8 +17,8 @@ export function authorizationMiddleware(roles:string[]){// build a middleware fu
             }
         }
         if(!allowed){
-            // if they didn't have a matching role kick em out
-            res.status(403).send('YOu have insufficent permissions for this endpoint')
+            
+            res.status(403).send('The incoming token has expired')
         }
     }
 

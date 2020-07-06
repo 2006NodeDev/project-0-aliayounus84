@@ -1,5 +1,5 @@
 export class ReimbursementDTO{
-  reimbursement_id: number
+  reimbursementId: number
   author: number
   amount: number
   dateSubmitted: Date

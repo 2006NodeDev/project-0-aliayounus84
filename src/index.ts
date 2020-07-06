@@ -47,7 +47,6 @@ app.post('/login', async (req:Request, res:Response, next:NextFunction)=>{
 
 
 
-
 // the error handler we wrote that express redirects top level errors to
 app.use((err, req, res, next) => {
     //if it is one of our custom errors
@@ -63,7 +62,7 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(2009, () => {
+app.listen(2008, () => {
     console.log('Server has started');
 })
 

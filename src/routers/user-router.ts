@@ -5,19 +5,19 @@ import { authorizationMiddleware } from '../middleware/authorization-middleware'
 import { UserUserInputError } from '../errors/UserUserInputError'
 import { User } from '../models/User'
 //import { PoolClient } from 'pg'
-// our base path is /users
+
+
 export const userRouter = express.Router()
 
-// this applies this middleware to the entire router beneath it
+// Middleware
 userRouter.use(authenticationMiddleware)
 
 
-// Get all
-userRouter.get('/', authorizationMiddleware(['Finance-Manager']), async (req: Request, res: Response, next: NextFunction) => {
+// Get all users
+userRouter.get('/', authorizationMiddleware(['Finance-Manager','Admin']), async (req: Request, res: Response, next: NextFunction) => {
     
     try {
-        //lets try not being async and see what happens
-        let allUsers = await getAllUsers()//thinking in abstraction
+        let allUsers = await getAllUsers()
         res.json(allUsers)
     } catch (e) {
         next(e)
@@ -26,7 +26,7 @@ userRouter.get('/', authorizationMiddleware(['Finance-Manager']), async (req: Re
 
 
 //get by id
-userRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.get('/:id',authorizationMiddleware(['Finance-Manager']), async (req: Request, res: Response, next: NextFunction) => {
     let { id } = req.params
     if (isNaN(+id)) {
         // send a response telling them they need to give us a number
@@ -82,12 +82,12 @@ userRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
 
 userRouter.patch('/', authorizationMiddleware(['Admin']), async (req: Request, res: Response, next: NextFunction) => {
     // get input from the user
-    let { userId,username, password,firstname,lastname, email, role } = req.body//a little old fashioned destructuring
+    let { userId,username, password,firstname,lastname, email, role } = req.body
     //verify that input
     if (!username || !password || !role) {
         next(new UserUserInputError)
     } else {
-        //try  with a function call to the dao layer to try and save the user
+        
         let UserUpdate: User = {
             username,
             password,
@@ -102,14 +102,13 @@ userRouter.patch('/', authorizationMiddleware(['Admin']), async (req: Request, r
              await UpdateUser(UserUpdate)
 
             res.send('User info is updated!')// needs to have the updated userId
+
+
         } catch (e) {
             next(e)
         }
     }
-
-
-    //catch with next(e)
-
+//
 
 })
 

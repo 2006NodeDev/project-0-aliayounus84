@@ -1,10 +1,10 @@
 import { ReimbursementDTO } from "../dtos/reimbursement-dto";
-import { Reimbursement } from "../models/Reimbursement";
+import { Reimbursement } from "../models/reimbursement"
 
 
 export function ReimbursementDTOtoReimbursementConverter(rdto: ReimbursementDTO): Reimbursement{
     return {
-        reimbursementId: rdto.reimbursement_id,
+        reimbursementId: rdto.reimbursementId,
         author: rdto.author,
         amount: rdto.amount,
         dateSubmitted: rdto.dateSubmitted.getDate(),
