@@ -1,8 +1,3 @@
-// different users have different roles
-// different roles allow you to do different things
-// different endpoints require different roles
-//before I allow someone to access an endpoint, I want to make sure they have a role that matches that endpoints allowed roles
-
 import { Request, Response, NextFunction } from "express";
 
 // this function is a middleware factory
@@ -18,18 +13,12 @@ export function authorizationMiddleware(roles:string[]){// build a middleware fu
         }
         if(!allowed){
             
-            res.status(403).send('The incoming token has expired')
+            res.status(401).send('The incoming token has expired! insufficient permission')
         }
     }
 
 }
 
 
-// allow admin+manager
 
-//allow only admin
-
-//allow user + manage + admin
-
-//allow user + admin
 

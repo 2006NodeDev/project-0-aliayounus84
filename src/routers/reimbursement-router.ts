@@ -11,15 +11,15 @@ reimbursementRouter.use(authenticationMiddleware)
 
 
 //get by id
-reimbursementRouter.get('status/:statusId',authorizationMiddleware(['Finance-Manager']), async (req: Request, res: Response, next: NextFunction) => {
+reimbursementRouter.get('/author/userid/:id',authorizationMiddleware(['Finance-Manager']), async (req: Request, res: Response, next: NextFunction) => {
     let { id } = req.params
     if (isNaN(+id)) {
         // send a response telling them they need to give us a number
-        res.status(400).send('Id needs to be a number')// the error way is better because it scales easier, fewer places you have to change code if you want to refactor
+        res.status(400).send('Id needs to be a number')
     } else {
         try {
-            let user = await getReimbursementbyStatusId(+id)
-            res.json(user)
+            let reimbursement = await getReimbursementbyStatusId(+id)
+            res.json(reimbursement)
         } catch (e) {
             next(e)
         }

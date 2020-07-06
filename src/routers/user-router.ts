@@ -30,12 +30,14 @@ userRouter.get('/:id',authorizationMiddleware(['Finance-Manager']), async (req: 
     let { id } = req.params
     if (isNaN(+id)) {
         // send a response telling them they need to give us a number
-        res.status(400).send('Id needs to be a number')// the error way is better because it scales easier, fewer places you have to change code if you want to refactor
+        res.status(400).send('Id needs to be a number')
     } else {
         try {
             let user = await getUserById(+id)
             res.json(user)
         } catch (e) {
+
+            
             next(e)
         }
     }

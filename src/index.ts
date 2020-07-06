@@ -4,6 +4,7 @@ import { userRouter } from './routers/user-router'
 import { sessionMiddleware } from './middleware/session-middleware'
 import { BadCredentialsError } from './errors/BadCredentialsError'
 import { getUserByUsernameAndPassword } from './daos/user-dao'
+import { reimbursementRouter } from './routers/reimbursement-router'
 
 
 const app = express()//we call the express function
@@ -21,6 +22,8 @@ app.use(sessionMiddleware)
 
 
 app.use('/users', userRouter)
+
+app.use('/reimbursement', reimbursementRouter)
 
 
 // an endpoint that unathenticated users can send credentials to to recieve authentication
@@ -62,7 +65,7 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(2008, () => {
+app.listen(2009, () => {
     console.log('Server has started');
 })
 

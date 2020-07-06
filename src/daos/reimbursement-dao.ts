@@ -33,6 +33,7 @@ export async function getReimbursementbyStatusId(id: number):Promise<Reimburseme
     } finally {
         //let the connectiopn go back to the pool
         client && client.release()
+    
     }
 }
 
