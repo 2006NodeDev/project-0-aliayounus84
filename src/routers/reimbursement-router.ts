@@ -6,7 +6,7 @@ import { authorizationMiddleware } from "../middleware/authorization-middleware"
 export const reimbursementRouter = express.Router()
 
 // this applies this middleware to the entire router beneath it
-reimbursemntRouter.use(authenticationMiddleware)
+reimbursementRouter.use(authenticationMiddleware)
 
 
 

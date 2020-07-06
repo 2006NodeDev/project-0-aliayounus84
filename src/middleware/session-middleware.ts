@@ -15,8 +15,3 @@ const sessionConfig:SessionOptions = {
 // and then it builds us a function for us to use
 
 export const sessionMiddleware = session(sessionConfig)//session is a factory function, config is the options
-// it returns a function in the form of ( req, res, next ) => {
-// it attaches a session object to the request where each uniqie connection to the server has a unique session
-// and then
-// next()
-//}
