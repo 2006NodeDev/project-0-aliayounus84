@@ -137,7 +137,7 @@ export async function getUserByUsernameAndPassword(username:string, password:str
 
 
 
-// **************************************updating a user in the database 
+// **************************************updating a user in the database PATCH
 
 export async function UpdateUser(UserUpdate: User) {
     let client: PoolClient;

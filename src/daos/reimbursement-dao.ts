@@ -1,10 +1,9 @@
-
-
 import { PoolClient } from "pg";
 import { connectionPool } from ".";
 import { Reimbursement } from "../models/reimbursement";
 import { ReimbursementDTOtoReimbursementConverter } from "../utils/reimbursementDTO-to-reimbursement";
 import {UserNotFoundError} from "../errors/UserNotFoundError"
+
 
 
 
@@ -17,10 +16,11 @@ export async function getReimbursementbyStatusId(id: number):Promise<Reimburseme
         client = await connectionPool.connect()
         //send the query
         
-        let results = await client.query('select r."reimbursementId", r."author",  r."amount", r."dateSubmitted", r."dateResolved", r."description", r."resolver", rs."statusId", rs."status", rt."typeId", rt."type" from project_0_ers.reimbursement r left join project_0_ers.reimbursementstatus rs on r."status" = rs."statusId" left join project_0_ers.reimbursementtype rt on r."type" = rt."typeId" left join project_0_ers.users u on r."author" = u."user_id" where u.user_id = $1 by r."dateSubmitted"'[id]);
+      let results = await client.query('select r."reimbursementId", r."author",  r."amount", r."dateSubmitted", r."dateResolved", r."description", r."resolver", rs."statusId", rs."status", rt."typeId", rt."type" from project_0_ers.reimbursement r left join project_0_ers.reimbursementstatus rs on r."status" = rs."statusId" left join project_0_ers.reimbursementtype rt on r."type" = rt."typeId" left join project_0_ers.users u on r."author" = u."user_id" where u.user_id = $1 order by r."dateSubmitted"'[id]);
 
-        
-        return results.rows.map(ReimbursementDTOtoReimbursementConverter)
+       
+     return results.rows.map(ReimbursementDTOtoReimbursementConverter)
+
     
       
     } catch (e) {
